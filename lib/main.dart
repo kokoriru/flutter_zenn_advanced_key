@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'stateful_tile.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -29,11 +31,25 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  late List<Widget> tiles;
 
-  void _incrementCounter() {
+  @override
+  void initState() {
+    super.initState();
+
+    // 2つの StatefluWidget を準備
+    tiles = [
+      StatefulTile(),
+      StatefulTile(),
+    ];
+  }
+
+  // 入れ替え処理
+  void changeTiles() {
     setState(() {
-      _counter++;
+      // insert で、第一引数である配列1番目の後に、第二引数である配列[0番目]を挿入する。
+      // tiles.removeAt(0) で tiles の 0番目の値を取り除く。
+      tiles.insert(1, tiles.removeAt(0));
     });
   }
 
@@ -43,22 +59,9 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
+      body: Row(children: tiles),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: changeTiles,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
